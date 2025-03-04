@@ -1,0 +1,7 @@
+body {
+    background: lightblue url('images/dashboardBackground.png') no-repeat;
+}
+
+li a {
+    color: green;
+}

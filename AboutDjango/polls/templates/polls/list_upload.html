@@ -1,0 +1,16 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'polls/style.css' %}" />
+
+{% if list_upload %}
+<ul>
+  {% for upload in list_upload %}
+  <li><a href="{{ upload.image.url }}">{{ upload.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No uploads are available.</p>
+{% endif %}
+
+
+<li><a href="{% url 'polls:indexupload' %}">Upload another file</a></li>
