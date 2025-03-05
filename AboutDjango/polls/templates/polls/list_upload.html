@@ -5,7 +5,7 @@
 {% if list_upload %}
 <ul>
   {% for upload in list_upload %}
-  <li><a href="{{ upload.image.url }}">{{ upload.name }}</a></li>
+  <li><a href="{{ upload.image.url }}" target="_blank">{{ upload.name }}</a></li>
   {% endfor %}
 </ul>
 {% else %}

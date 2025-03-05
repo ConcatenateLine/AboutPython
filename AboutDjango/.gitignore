@@ -46,6 +46,7 @@ htmlcov/
 
 # Local configuration files
 *.local
+staticfiles/
 
 # Database files
 *.sqlite3
