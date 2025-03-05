@@ -39,7 +39,6 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,6 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storages',
     'debug_toolbar',
+    'rest_framework',
+    'polls.apps.PollsConfig',
+    'crud.apps.CrudConfig',
 ]
 
 MIDDLEWARE = [

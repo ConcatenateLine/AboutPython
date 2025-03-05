@@ -1,0 +1,36 @@
+### Get method
+GET http://localhost:8000/api/projects/
+
+### Post method
+POST http://localhost:8000/api/projects/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Project 2",
+    "description": "Description 1",
+    "technologies": "Technologies 1"
+}
+
+### GET method
+GET http://localhost:8000/api/projects/3/
+
+### Put method
+PUT http://localhost:8000/api/projects/3/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Project 2 updated",
+    "description": "Description 1",
+    "technologies": "Technologies 1"
+}
+
+### Patch method
+PATCH http://localhost:8000/api/projects/3/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Project 3 updated"
+}
+
+### Delete method
+DELETE http://localhost:8000/api/projects/3/
