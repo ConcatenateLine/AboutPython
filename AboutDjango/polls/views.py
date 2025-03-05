@@ -9,6 +9,9 @@ from django.http import HttpResponse
 from .models import Choice, Question, ImageCF
 
 # Create your views here.
+def index(request):
+    return render(request, 'index.html', {})
+
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
