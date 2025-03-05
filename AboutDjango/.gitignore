@@ -47,6 +47,9 @@ htmlcov/
 # Local configuration files
 *.local
 
+# Database files
+*.sqlite3
+
 # Other files
 *.DS_Store
 *.pdb
