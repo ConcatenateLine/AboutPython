@@ -1,0 +1,55 @@
+{% extends "admin/login.html" %}
+{% block title %} Register | Objetivify {% endblock %}
+
+{% block branding %}
+<div id="site-name"><a href="{% url 'polls:home' %}"><span style="text-decoration: underline;">Objetivify</span> Register</a></div>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if form.errors and not form.non_field_errors %}
+<p class="errornote">
+  {{ form.errors.items|length }} Please correct the error below. Please correct the errors below.
+</p>
+{% endif %}
+
+{% if form.non_field_errors %}
+{% for error in form.non_field_errors %}
+<p class="errornote">
+    {{ error }}
+</p>
+{% endfor %}
+{% endif %}
+
+<div id="content-main">
+
+{% if user.is_authenticated %}
+<p class="errornote">
+    You are authenticated as {{ username }}, but are not authorized to
+    access this page. Would you like to login to a different account?
+</p>
+{% endif %}
+
+<form action="{% url 'polls:register' %}" method="post" id="login-form">{% csrf_token %}
+  <div class="form-row">
+    {{ form.errors.username }}
+    {{ form.username.label_tag }} {{ form.username }}
+  </div>
+  <div class="form-row" style="display: grid;">
+    {{ form.errors.password1 }}
+    {{ form.password1.label_tag }} {{ form.password1 }}
+  </div>
+  <div class="form-row" style="display: grid;">
+    {{ form.errors.password2 }}
+    {{ form.password2.label_tag }} {{ form.password2 }}
+  </div>
+  <a href="{% url 'polls:login' %}">Already have an account?</a>
+  <div class="submit-row">
+    <input type="submit" value="Register">
+  </div>
+</form>
+
+</div>
+{% endblock %}

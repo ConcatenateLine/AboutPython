@@ -1,0 +1,63 @@
+{% extends "admin/login.html" %}
+{% block title %} Login | Objetivify {% endblock %}
+
+{% block branding %}
+<div id="site-name"><a href="{% url 'polls:home' %}"><span style="text-decoration: underline;">Objetivify</span> login</a></div>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if form.errors and not form.non_field_errors %}
+<p class="errornote">
+  {{ form.errors.items|length }} Please correct the error below. Please correct the errors below.
+</p>
+{% endif %}
+
+{% if form.non_field_errors %}
+{% for error in form.non_field_errors %}
+<p class="errornote">
+    {{ error }}
+</p>
+{% endfor %}
+{% endif %}
+
+<div id="content-main">
+
+{% if user.is_authenticated %}
+<p class="errornote">
+    You are authenticated as {{ username }}, but are not authorized to
+    access this page. Would you like to login to a different account?
+</p>
+{% endif %}
+
+<form action="{% url 'polls:login' %}" method="post" id="login-form">{% csrf_token %}
+  {% if errors %}
+  <div class="errornote">
+    {% for error in errors %}
+    {{ error }}
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="form-row">
+    {{ form.username.label_tag }} {{ form.username }}
+  </div>
+  <div class="form-row">
+    {{ form.password.label_tag }} {{ form.password }}
+    <input type="hidden" name="next" value="{{ next }}">
+  </div>
+  {% url 'admin_password_reset' as password_reset_url %}
+  {% if password_reset_url %}
+  <div class="password-reset-link">
+    <a href="{{ password_reset_url }}">Forgotten your login credentials?</a>
+  </div>
+  {% endif %}
+  <a href="{% url 'polls:register' %}">Don't have an account?</a>
+  <div class="submit-row">
+    <input type="submit" value="Log in">
+  </div>
+</form>
+
+</div>
+{% endblock %}

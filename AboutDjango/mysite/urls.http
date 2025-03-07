@@ -1,0 +1,29 @@
+### Token Authentication ###
+POST http://localhost:8000/api/token/
+content-type: application/json
+
+{
+  "username": "concatenate",
+  "password": "admin213admin"
+}
+
+### Token Refresh ###
+POST http://localhost:8000/api/token/refresh/
+content-type: application/json
+
+{
+  "refresh": "<refresh_token>"
+}
+
+### Token Verify ###
+POST http://localhost:8000/api/token/verify/
+content-type: application/json
+
+{
+  "token": "<token>"
+}
+
+### User List ###
+GET http://localhost:8000/api/users/
+Authorization: Bearer <token>
+
