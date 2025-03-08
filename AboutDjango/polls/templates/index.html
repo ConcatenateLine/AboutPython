@@ -1,67 +1,61 @@
+{% extends "polls/base_site.html" %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% block title %} Homepage {% endblock %}
 
-    <title>Objetivify - Django on Render!</title>
+{% block header %}
+  <div class="p-4 flex flex-row justify-end gap-4">
+    
+    {% if user.is_authenticated %}
+      {% include "blocks/button_secondary.html" with url='polls:logout' text='Logout' %}
+    {% else %}
+      {% include "blocks/button_secondary.html" with url='polls:login' text='Login' %}
+      {% include "blocks/button_secondary.html" with url='polls:register' text='Register' %}
+    {% endif %}
+  </div>
+{% endblock %}
 
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <header class="container mt-4 mb-4">
-      <a href="https://render.com" target="_blank">
-        <img src="{% static "render-banner.webp" %}" alt="Homepage
-        banner" class="mw-100">
-      </a>
-    </header>
-    <main class="container">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'polls:home' %}">Objetivify</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ml-auto">
-            {% if user.is_authenticated %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'polls:dashboard' %}">Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'polls:logout' %}">Logout</a>
-            </li>
-            {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'polls:login' %}">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'polls:register' %}">Register</a>
-            </li>
-            {% endif %}
-          </ul>
+{% block content %}
+  <div class="grid grid-cols-2 border border-[var(--border-color)]">
+      <div class="col content-center overflow-hidden">
+          <div class="flex justify-center align-center">
+            <p class="font-bold text-4xl md:text-6xl lg:text-9xl">Objetivify</p>
+          </div>  
+      </div>
+      <div class="col border border-[var(--border-color)]"> 
+        <div class="row border border-[var(--border-color)] bg-[url('{% static 'polls/images/background.svg' %}')] bg-cover bg-center">
+            <div class="row mt-8 mb-8 grid justify-center">
+              
+            </div>  
         </div>
-      </nav>
+        <div class="row mt-4 mb-4 grid justify-center">
+          <a href="https://render.com" target="_blank">
+            <img src="{% static "render-banner.webp" %}" alt="Homepage banner"
+            class="mw-100">
+          </a>
+        </div>  
+      </div>
+      <div class="col border border-[var(--border-color)] bg-[url('{% static 'polls/images/background.svg' %}')] bg-cover bg-center">
+        <div class="row">
+          <div class="row mt-8 mb-8 grid justify-center">
+          </div>  
+        </div>
+      </div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <div class="flex justify-between border-t border-[var(--border-color)]">
+    <div class="row text-center">
       {% if user.is_authenticated %}
-      <div class="row text-center justify-content-center">
-        <div class="col">
-          <h1 class="display-4">Hello {{ user.username }}!</h1>
-        </div>
-      </div>
+          <p class="text-sm">Hello {{ user.username }}!</p>
       {% else %}
-      <div class="row text-center justify-content-center">
-        <div class="col">
-          <h1 class="display-4">Hello World!</h1>
-        </div>
-      </div>
+          <p class="text-sm">Hello World!</p>
       {% endif %}
-    </main>
-  </body>
-</html>
+    </div>  
+    <div class="row">
+      <p class="text-sm">Copyright © 2025 ConcatenateLine. All rights reserved.</p>
+    </div>
+  </div>
+{% endblock %}

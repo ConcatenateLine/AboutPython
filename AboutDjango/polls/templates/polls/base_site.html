@@ -1,0 +1,188 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr,auto' }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %} | Objetivify</title>
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'polls/images/objetivify.png' %}"
+    />
+    <link rel="stylesheet" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+
+    {% block dark-mode-vars %}
+        <link rel="stylesheet" href="{% static "admin/css/dark_mode.css" %}">
+        <script src="{% static "admin/js/theme.js" %}"></script>
+    {% endblock %}
+
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+    <style type="text/tailwindcss">
+      html[data-theme="light"],
+        :root {
+            --green-primary-color: #1c4d4a;
+            --green-secondary-color: #9eb1ac;
+            --green-tertiary-color: #dfe3de;
+            --orange-color: #fc6719;
+            --yellow-color: #ffb120;
+            --pale-orange-color: #fbebd6;
+            --pale-blue-color: #ccdcf6;
+            --blue-color: #1c4a90;
+            --light-gray-color: #f5f3ee;
+
+            --primary: #9eb1ac;
+            --secondary: #1c4d4a;
+            --accent: #f5dd5d;
+            --primary-fg: var(--green-primary-color);
+
+            --body-fg: #000000;
+            --body-bg: var(--green-primary-color);
+            --body-quiet-color: var(--green-tertiary-color);
+            --body-medium-color: var(--green-secondary-color);
+            --body-loud-color: #000;
+
+            --header-color: #ffc;
+            --header-branding-color: var(--accent);
+            --header-bg: var(--secondary);
+            --header-link-color: var(--primary-fg);
+
+            --breadcrumbs-fg: var(--orange-color);
+            --breadcrumbs-link-fg: var(--body-bg);
+            --breadcrumbs-bg: var(--green-tertiary-color);
+
+            --link-fg: var(--primary-fg);
+            --link-hover-color: #036;
+            --link-selected-fg: var(--secondary);
+
+            --hairline-color: #e8e8e8;
+            --border-color: var(--body-quiet-color);
+
+            --error-fg: #ba2121;
+
+            --message-success-bg: #dfd;
+            --message-warning-bg: #ffc;
+            --message-error-bg: #ffefef;
+
+            --darkened-bg: #f8f8f8; /* A bit darker than --body-bg */
+            --selected-bg: #e4e4e4; /* E.g. selected table cells */
+            --selected-row: #ffc;
+
+            --button-fg: #fff;
+            --button-bg: var(--secondary);
+            --button-hover-bg: #205067;
+            --default-button-bg: #205067;
+            --default-button-hover-bg: var(--secondary);
+            --close-button-bg: #747474;
+            --close-button-hover-bg: #333;
+            --delete-button-bg: #ba2121;
+            --delete-button-hover-bg: #a41515;
+
+            --object-tools-fg: var(--button-fg);
+            --object-tools-bg: var(--close-button-bg);
+            --object-tools-hover-bg: var(--close-button-hover-bg);
+
+            --button-custom-bg: var(--green-tertiary-color);
+            --button-custom-hover-bg: var(--orange-color);
+
+            --grid-template-rows: 15% 5% 75% 5%;
+
+            {% comment %} --font-family-primary:
+            "Segoe UI",
+            system-ui,
+            Roboto,
+            "Helvetica Neue",
+            Arial,
+            sans-serif,
+            "Apple Color Emoji",
+            "Segoe UI Emoji",
+            "Segoe UI Symbol",
+            "Noto Color Emoji";
+            --font-family-monospace:
+                ui-monospace,
+                Menlo,
+                Monaco,
+                "Cascadia Mono",
+                "Segoe UI Mono",
+                "Roboto Mono",
+                "Oxygen Mono",
+                "Ubuntu Monospace",
+                "Source Code Pro",
+                "Fira Mono",
+                "Droid Sans Mono",
+                "Courier New",
+                monospace,
+                "Apple Color Emoji",
+                "Segoe UI Emoji",
+                "Segoe UI Symbol",
+                "Noto Color Emoji"; {% endcomment %}
+
+            color-scheme: light;
+        }
+        
+    </style>
+    {% block extrastyle %}{% endblock %}
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+
+    {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+  </head>
+
+  <body class="grid grid-rows-[var(--grid-template-rows)] {% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+  data-admin-utc-offset="{% now "Z" %}">
+    <a href="#content-start" class="skip-to-content-link">{% translate 'Skip to main content' %}</a>
+    {% include "blocks/color_theme_toggle.html" %}
+
+    {% if not is_popup %}
+        <!-- Header -->
+        {% block header %}
+        <header id="header">
+        </header>
+      {% endblock %}
+      <!-- END Header -->
+
+      {% block nav-breadcrumbs %}
+      <nav aria-label="{% translate 'Breadcrumbs' %}">
+        {% block breadcrumbs %}
+          <div class="breadcrumbs">
+            {% if title %} &rsaquo; {{ title }}{% endif %}
+          </div>
+        {% endblock %}
+      </nav>
+    {% endblock %}
+    {% endif %}
+
+    <div class="main" id="main">
+        <main id="content-start" class="content" tabindex="-1">
+          {% block messages %}
+            {% if messages %}
+              <ul class="messagelist">{% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+              {% endfor %}</ul>
+            {% endif %}
+          {% endblock messages %}
+          <!-- Content -->
+          <div id="content" class="{% block coltype %}colM{% endblock %}">
+            {% block pretitle %}{% endblock %}
+            {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+            {% block object-tools %}{% endblock %}
+            {% block content_subtitle %}{% if subtitle %}<h2>{{ subtitle }}</h2>{% endif %}{% endblock %}
+            {% block content %}
+              {{ content }}
+            {% endblock %}
+            {% block sidebar %}{% endblock %}
+            <br class="clear">
+          </div>
+          <!-- END Content -->
+        </main>
+      </div>
+      
+      <footer id="footer">
+        {% block footer %}{% endblock %}
+      </footer>
+
+      {% block extrabody %}
+      {% endblock extrabody %}
+  </body>
+</html>
