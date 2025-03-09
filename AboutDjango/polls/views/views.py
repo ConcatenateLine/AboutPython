@@ -5,12 +5,13 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.http import HttpResponse
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes, api_view
+
+from users.decorators import public_path
 
 from ..models import Choice, Question, ImageCF
 
 # Create your views here.
+@public_path
 def index(request):
     return render(request, 'index.html', {})
 

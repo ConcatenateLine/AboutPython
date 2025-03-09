@@ -1,0 +1,44 @@
+{% extends "polls/base_site.html" %}
+{% block title %} 404 {% endblock %}
+
+{% block branding %}
+<div id="site-name"><a href="{% url 'polls:home' %}"><span style="font-weight: bold; text-decoration: underline;">Objetivify</span> 404</a></div>
+{% endblock %}
+
+{% block content %}
+<div class="container flex flex-col w-full content-center justify-center items-center">
+  {% if form.errors and not form.non_field_errors %}
+  <p class="errornote">
+    {{ form.errors.items|length }} Please correct the error below. Please correct the errors below.
+  </p>
+  {% endif %}
+
+  {% if form.non_field_errors %}
+  {% for error in form.non_field_errors %}
+  <p class="errornote">
+      {{ error }}
+  </p>
+  {% endfor %}
+  {% endif %}
+
+  <div class="bg-[var(--body-quiet-color)] p-4 max-w-md w-full">
+
+  {% if user.is_authenticated %}
+  <p class="errornote">
+      404 - Page not found
+  </p>
+  <a href="{% url 'polls:dashboard' %}" class="mb-4">Back to Dashboard</a>
+  {% else %}
+  <p class="errornote">
+      404 - Page not found
+  </p>
+  <a href="{% url 'polls:home' %}" class="mb-4">Back to Home</a>
+  {% endif %}
+
+  <p class="text-9xl text-center">
+    404
+  </p>
+
+  </div>
+</div>
+{% endblock %}

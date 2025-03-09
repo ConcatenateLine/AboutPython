@@ -51,7 +51,7 @@
 
             --breadcrumbs-fg: var(--orange-color);
             --breadcrumbs-link-fg: var(--body-bg);
-            --breadcrumbs-bg: var(--green-tertiary-color);
+            --breadcrumbs-bg: var(--body-quiet-color);
 
             --link-fg: var(--primary-fg);
             --link-hover-color: #036;
@@ -89,6 +89,14 @@
 
             --grid-template-rows: 15% 5% 75% 5%;
 
+            input {
+             background-color: var(--body-medium-color); 
+            }
+
+            .errornote, .errorlist {
+              background-color: var(--pale-orange-color);
+            }
+
             {% comment %} --font-family-primary:
             "Segoe UI",
             system-ui,
@@ -121,7 +129,7 @@
 
             color-scheme: light;
         }
-        
+
     </style>
     {% block extrastyle %}{% endblock %}
     {% if LANGUAGE_BIDI %}<link rel="stylesheet" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
@@ -137,7 +145,10 @@
     {% if not is_popup %}
         <!-- Header -->
         {% block header %}
-        <header id="header">
+        <header id="header" style="padding-left: 6rem;">
+          {% block branding %}
+            <div id="site-name"><a href="{% url 'polls:home' %}"><span style="font-weight: bold; text-decoration: underline;">Objetivify</span></a></div>
+          {% endblock %}
         </header>
       {% endblock %}
       <!-- END Header -->

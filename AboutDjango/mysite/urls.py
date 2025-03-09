@@ -39,5 +39,7 @@ urlpatterns = [
     path('api/', include('crud.urls')),
 ]
 
+handler404 = 'polls.views.errorviews.custom_404_view'
+
 if settings.DEBUG:
     urlpatterns += debug_toolbar_urls()

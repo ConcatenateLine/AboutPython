@@ -1,9 +1,11 @@
 ### Get method
 GET http://localhost:8000/api/projects/
+Authorization: Bearer <token>
 
 ### Post method
 POST http://localhost:8000/api/projects/ HTTP/1.1
 content-type: application/json
+Authorization: Bearer <token>
 
 {
     "name": "Project 2",
@@ -13,10 +15,14 @@ content-type: application/json
 
 ### GET method
 GET http://localhost:8000/api/projects/3/
+Authorization: Bearer <token>
+
 
 ### Put method
 PUT http://localhost:8000/api/projects/3/ HTTP/1.1
 content-type: application/json
+Authorization: Bearer <token>
+
 
 {
     "name": "Project 2 updated",
@@ -27,6 +33,7 @@ content-type: application/json
 ### Patch method
 PATCH http://localhost:8000/api/projects/3/ HTTP/1.1
 content-type: application/json
+Authorization: Bearer <token>
 
 {
     "name": "Project 3 updated"
@@ -34,3 +41,4 @@ content-type: application/json
 
 ### Delete method
 DELETE http://localhost:8000/api/projects/3/
+Authorization: Bearer <token>
