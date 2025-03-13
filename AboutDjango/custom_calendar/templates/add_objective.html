@@ -1,0 +1,41 @@
+{% extends 'base/base_site.html' %}
+
+{% block title %}
+Add Objective
+{% endblock %}
+
+{% block header %}
+    <header id="header" style="padding-left: 6rem;">
+        {% block branding %}
+        <div id="site-name"><a href="{% url 'polls:home' %}"><span style="font-weight: bold; text-decoration: underline;">Objetivify</span></a></div>
+        {% endblock %}
+        <div class="container flex justify-center items-center bg-[var(--body-quiet-color)]">
+            <a class="btn btn-info left text-[var(--accent)]" href="{% url 'calendar:index' %}"> Calendar </a>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                {{ field.label }} <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ field.label }} <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <table class="form form-table">
+    {{ form }}
+    <tr><td colspan="2"><button type="submit" class="btn btn-info right"> Submit </button></td></tr>
+  </table>
+</form>
+{% endblock %}

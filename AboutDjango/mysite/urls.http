@@ -12,7 +12,15 @@ POST http://localhost:8000/api/token/refresh/
 content-type: application/json
 
 {
-  "refresh": "<refresh_token>"
+  "refresh": "<refresh>"
+}
+
+### Token Refresh 2 ###
+POST http://localhost:8000/api/token/refresh/
+content-type: application/json
+
+{
+  "refresh": "<refresh>"
 }
 
 ### Token Verify ###

@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+from datetime import timedelta
 import os
 import dj_database_url
 
@@ -59,6 +60,7 @@ INSTALLED_APPS = [
     'polls.apps.PollsConfig',
     'users.apps.UsersConfig',
     'crud.apps.CrudConfig',
+    'custom_calendar.apps.CustomCalendarConfig',
 ]
 
 MIDDLEWARE = [
@@ -70,7 +72,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'users.mixins.CustomLoginRequiredMixin',
+    'users.middleware.CustomLoginRequiredMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
@@ -139,7 +141,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'rest_framework_simplejwt.authentication.JWTAuthentication',
 )
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

@@ -22,7 +22,7 @@ def login(request):
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
 
         if not next_url:
-            next_url = reverse('polls:dashboard')
+            next_url = reverse('calendar:index')
 
         if user is not None:
             django_login(request, user)

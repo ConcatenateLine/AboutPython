@@ -1,1 +1,2 @@
 from .RedirectAuthenticatedMiddleware import RedirectAuthenticatedMiddleware
+from .CustomLoginRequiredMiddleware import CustomLoginRequiredMiddleware
