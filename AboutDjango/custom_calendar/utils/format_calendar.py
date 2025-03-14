@@ -3,9 +3,10 @@ from calendar import HTMLCalendar
 from ..models import Objetive
 
 class FormatCalendar(HTMLCalendar):
-	def __init__(self, year=None, month=None):
+	def __init__(self, user, year=None, month=None):
 		self.year = year
 		self.month = month
+		self.user = user
 		super(FormatCalendar, self).__init__()
 
 	# formats a day as a td
@@ -29,11 +30,12 @@ class FormatCalendar(HTMLCalendar):
 
 	# formats a month as a table
 	# filter objetives by year and month
-	def formatmonth(self, withyear=True):
-		objetives = Objetive.objects.filter(start_time__year=self.year, start_time__month=self.month)
+	def formatmonth(self, withyear=False):
+		objetives = Objetive.objects.filter(owner=self.user,start_time__year=self.year, start_time__month=self.month)
 
 		cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar">\n'
-		cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
+		# cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
+		cal += f'<tr><th colspan="7" class="month"></th></tr>\n'
 		cal += f'{self.formatweekheader()}\n'
 		for week in self.monthdays2calendar(self.year, self.month):
 			cal += f'{self.formatweek(week, objetives)}\n'

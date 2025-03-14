@@ -6,4 +6,5 @@ urlpatterns = [
     path('', views.index.as_view(), name='index'),
     path(r'objective/new/', views.event, name='objective_new'),
     path(r'objective/edit/<str:objective_id>/', views.event, name='objective_edit'),
+    path(r'objective/delete/<str:objective_id>/', views.delete_objetive, name='objective_delete'),
 ]

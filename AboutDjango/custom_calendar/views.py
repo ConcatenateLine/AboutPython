@@ -22,8 +22,8 @@ class index( generic.ListView ):
         # cal = FormatCalendar(d.year, d.month-1)
         # html_cal = cal.formatmonth(withyear=True)
 
-        cal = FormatCalendar(d.year, d.month)
-        html_cal = cal.formatmonth(withyear=True)
+        cal = FormatCalendar(self.request.user, d.year, d.month)
+        html_cal = cal.formatmonth()
 
         # cal = FormatCalendar(2025, d.month+1)
         # html_cal += cal.formatmonth(withyear=True)
@@ -56,25 +56,52 @@ def next_month(d):
 
 def event(request, objective_id=None):
     instance: Objetive = None
+    image = None
+    initial = {}
+
     if objective_id:
         instance = get_object_or_404(Objetive, pk=objective_id)
     else:
         instance = Objetive()
 
-    form = AddObjectiveForm(request.POST or None, instance=instance, initial={
-        'themes': ",".join(list(instance.themes.all().values_list('name', flat=True)))
-    })
+    initial['themes'] = ",".join(list(instance.themes.all().values_list('name', flat=True)))
+    if instance.image:      
+        initial['image'] = instance.image.image.url
     
+    form = AddObjectiveForm(request.POST or None, request.FILES or None, instance=instance, initial=initial)
+        
     if request.POST and form.is_valid():
+        if 'image' in request.FILES:
+            image = request.FILES['image']
        
-        custom_calendar = CustomCalendarActions(request.user, themes=form.cleaned_data['themes'])
-        custom_calendar.add_objetives(form.cleaned_data, objective_id)
+        try:
+            custom_calendar = CustomCalendarActions(request.user, themes=form.cleaned_data['themes'])
+            custom_calendar.add_objetives(request.user, form.cleaned_data, image, objective_id)
 
-        if objective_id:
-            messages.success(request, 'You have updated an objective.')
-        else:
-            messages.success(request, 'You have added a new objective.')
+            if objective_id:
+                messages.success(request, 'You have updated an objective.')
+            else:
+                messages.success(request, 'You have added a new objective.')
+            
+            return HttpResponseRedirect(reverse('calendar:index'))
+        except Exception as e:
+            if hasattr(e,'messages'):
+                messages.error(request, str(",".join(e.messages)))
+            else:
+                messages.error(request, str(e))
         
-        return HttpResponseRedirect(reverse('calendar:index'))
-        
-    return render(request, 'add_objective.html', {'form': form})
+    return render(request, 'add_objective.html', {'form': form, 'objective_id': objective_id})
+
+def delete_objetive(request, objective_id=None):
+        try:
+            custom_calendar = CustomCalendarActions(request.user)
+            custom_calendar.delete_objetive(request.user, objective_id)
+            messages.success(request, 'You have deleted an objective.')
+            return HttpResponseRedirect(reverse('calendar:index'))
+        except Exception as e:
+            if hasattr(e, 'messages'):
+                messages.error(request, str(','.join(e.messages)))
+            else:
+                messages.error(request, str(e))
+
+            return HttpResponseRedirect(reverse('calendar:objective_edit', args=(objective_id,)))

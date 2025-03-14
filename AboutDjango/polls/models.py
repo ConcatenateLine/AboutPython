@@ -3,7 +3,6 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
-from storages.backends.s3boto3 import S3Boto3Storage
 
 # Create your models here.
 class Question(models.Model):
@@ -29,7 +28,3 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
-
-class ImageCF(models.Model):
-    name = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='images/',storage=S3Boto3Storage)

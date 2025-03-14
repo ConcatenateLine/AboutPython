@@ -4,11 +4,10 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-from django.http import HttpResponse
 
 from users.decorators import public_path
 
-from ..models import Choice, Question, ImageCF
+from ..models import Choice, Question
 
 # Create your views here.
 @public_path
@@ -56,23 +55,3 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
-
-class ListUploadView(generic.ListView):
-    template_name = "polls/list_upload.html"
-    context_object_name = "list_upload"
-
-    def get_queryset(self):
-        return ImageCF.objects.all()
-
-def IndexUploadView(request):
-    return render(request, "polls/index_upload.html")
-
-def upload(request):
-    if request.method == "POST":
-        file = request.FILES["file"]
-        image = ImageCF.objects.create(name=file.name, image=file)
-
-    return HttpResponseRedirect(reverse("polls:listupload"))
-
-def success(request):
-    return HttpResponse

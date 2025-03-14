@@ -84,13 +84,14 @@
             --object-tools-bg: var(--close-button-bg);
             --object-tools-hover-bg: var(--close-button-hover-bg);
 
-            --button-custom-bg: var(--green-tertiary-color);
+            --button-custom-bg: var(--body-quiet-color);
             --button-custom-hover-bg: var(--orange-color);
 
             --grid-template-rows: 15% 5% 75% 5%;
+            --grid-template-header-columns: 15% 70% 15%;
 
-            input {
-             background-color: var(--body-medium-color); 
+            input, textarea, select {
+              background-color: var(--body-medium-color); 
             }
 
             .errornote, .errorlist {
@@ -145,9 +146,16 @@
     {% if not is_popup %}
         <!-- Header -->
         {% block header %}
-        <header id="header" style="padding-left: 6rem;">
+        <header class="pl-24 grid md:grid-cols-[var(--grid-template-header-columns)] justify-center items-center">
           {% block branding %}
             <div id="site-name"><a href="{% url 'polls:home' %}"><span style="font-weight: bold; text-decoration: underline;">Objetivify</span></a></div>
+          {% endblock %}
+          {% block header_content %}
+          {% endblock %}
+          {% block header_content_end %}
+            <div class="flex justify-end min-w-20">
+              {% include "blocks/button.html" with url='polls:logout' text="Logout" %}
+            </div>
           {% endblock %}
         </header>
       {% endblock %}
@@ -189,7 +197,7 @@
         </main>
       </div>
       
-      <footer id="footer">
+      <footer id="footer" class="z-[-1]">
         {% block footer %}{% endblock %}
       </footer>
 

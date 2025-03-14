@@ -1,27 +1,22 @@
 {% extends "base/base_site.html" %}
 {% block title %}Calendar for {{ year }}{% endblock %}
 
-{% block header %}
-    <header id="header" style="padding-left: 6rem;">
-        {% block branding %}
-        <div id="site-name"><a href="{% url 'polls:home' %}"><span style="font-weight: bold; text-decoration: underline;">Objetivify</span></a></div>
-        {% endblock %}
-        <div class="container flex justify-center items-center bg-[var(--body-quiet-color)]">
-            <a class="btn btn-info left" href="{% url 'calendar:index' %}?{{ prev_month }}"> Previous Month </a>
-            <a class="btn btn-info right" href="{% url 'calendar:index' %}?{{ next_month }}"> Next Month </a>
-            <a class="btn btn-info right" href="{% url 'calendar:objective_new' %}"> New Objective </a>
-        </div>
-    </header>
+{% block header_content %}
+    <div class="container flex justify-start items-center border-4 border-[var(--body-quiet-color)]">
+        {% include "blocks/button.html" with url='calendar:index' action=prev_month text="Previous Month" %}
+        {% include "blocks/button.html" with url='calendar:index' action=next_month text="Next Month" %}
+        {% include "blocks/button.html" with url='calendar:objective_new' text="New Objective" %}
+    </div>
 {% endblock %}
 
 {% block content %}
 <div class="grid grid-cols-4">
     <div class="container">
         <p class="font-bold text-xl text-[var(--accent)]">Calendar for {{ year }}</p>
-        <div class="grid">
+        <div class="grid border-r-4 border-[var(--body-quiet-color)]">
         {% for month in months %}
             {% if forloop.counter == current_month %}
-                {% include "blocks/select_month.html" with url='calendar:index' text=month year=year active=True %}
+                {% include "blocks/select_month.html" with url='calendar:index' text=month year=year index=forloop.counter active=True %}
             {% else %}
                 {% include "blocks/select_month.html" with url='calendar:index' text=month year=year index=forloop.counter %}
             {% endif %}
