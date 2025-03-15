@@ -11,7 +11,7 @@ Add Objective
 {% endblock %}
 
 {% block content %}
-<div class="container grid justify-center">
+<div class="grid justify-center">
     <div class="bg-[var(--body-quiet-color)] p-4 max-w-md w-full">
         {% if form.errors %}
             {% for field in form %}
@@ -61,8 +61,12 @@ Add Objective
                 {{ form.image }}
             </div>
             <div class="mb-4 flex justify-center items-center border-2 border-dashed border-[var(--body-primary-color)] w-20 h-20 content overflow-hidden">
-                <img id="image-preview" src="{{ form.image.value }}" alt="Image Preview" style="
-                    {% if form.image.value %}
+                <img id="image-preview" 
+                    src="{% if form.image.value %}
+                        {{ form.image.value }}
+                    {% endif %}"
+                    alt="Image Preview" 
+                    style="{% if form.image.value %}
                         display: block;
                     {% else %}
                         display: none;

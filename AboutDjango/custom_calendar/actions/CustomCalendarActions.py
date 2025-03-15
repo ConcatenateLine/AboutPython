@@ -100,14 +100,15 @@ class CustomCalendarActions:
 
         objective = Objetive.objects.get(uuid=objective_id)
 
-        print('image')
-        print(objective.image)
-
         if objective.owner != user:
             raise ValidationError('You are not authorized to delete this objective.')
 
-        if objective.image:
-            image = objective.image
-            image.delete()
+        try:
+            if objective.image:
+                image = ImageCF.objects.get(name=objective.image.name)
+                image.delete()
+            else:
+                objective.delete()
 
-        objective.delete()
+        except Exception as e:
+            raise ValidationError(str(e))

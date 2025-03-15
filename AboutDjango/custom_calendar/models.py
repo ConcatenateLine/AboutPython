@@ -1,9 +1,17 @@
 import uuid
-import os
 from django.db import models
 from django.shortcuts import reverse
 
 from storages.backends.s3boto3 import S3Boto3Storage
+
+class PublicMediaStorage(S3Boto3Storage):
+    location = 'media'
+    default_acl = 'public-read'
+
+class PrivateMediaStorage(S3Boto3Storage):
+    location = 'private_media'
+    default_acl = 'private'
+    file_overwrite = False
 
 # Create your models here.
 class CustomCalendar(models.Model):
@@ -51,8 +59,12 @@ class Theme(models.Model):
 
 class ImageCF(models.Model):
     name = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='images/custom_calendar/',storage=S3Boto3Storage)
+    image = models.ImageField(storage=PrivateMediaStorage())
     owner = models.ForeignKey('auth.User', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
+
+    def delete(self):
+        self.image.delete(save=False)
+        super().delete()
