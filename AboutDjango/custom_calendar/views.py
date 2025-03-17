@@ -9,7 +9,7 @@ from custom_calendar.actions import CustomCalendarActions
 from custom_calendar.forms.add_objective import AddObjectiveForm
 
 from .models import Objetive
-from .utils import FormatCalendar
+from .utils import FormatCalendar, CustomFormatCalendar
 
 # Create your views here.
 class index( generic.ListView ):
@@ -19,10 +19,18 @@ class index( generic.ListView ):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         d = get_date(self.request.GET.get('month', None))
+        cal = None
+
         # cal = FormatCalendar(d.year, d.month-1)
         # html_cal = cal.formatmonth(withyear=True)
-
-        cal = FormatCalendar(self.request.user, d.year, d.month)
+        
+        # if mycalendar.format =='default':
+        if False:
+            cal = FormatCalendar(self.request.user, d.year, d.month)
+        else:
+            cal = CustomFormatCalendar(self.request.user, d.year, d.month)
+        
+        cal.setfirstweekday(6)
         html_cal = cal.formatmonth()
 
         # cal = FormatCalendar(2025, d.month+1)

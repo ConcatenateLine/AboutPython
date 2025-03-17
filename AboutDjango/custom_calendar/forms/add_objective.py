@@ -4,7 +4,7 @@ from custom_calendar.models import Objetive
 
 class AddObjectiveForm(ModelForm):
     themes = CharField(
-        max_length=250,
+        max_length=150,
         required=False,
         widget=TextInput(attrs={
             'class': 'form-control',

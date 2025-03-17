@@ -24,6 +24,7 @@ class CustomCalendar(models.Model):
     owner = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     objetives = models.ManyToManyField('Objetive', blank=True)
     themes = models.ManyToManyField('Theme', blank=True)
+    format = models.CharField(max_length=100, default="default")
 
     def __str__(self):
         return self.name
