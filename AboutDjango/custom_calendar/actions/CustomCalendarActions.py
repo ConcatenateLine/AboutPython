@@ -112,3 +112,16 @@ class CustomCalendarActions:
 
         except Exception as e:
             raise ValidationError(str(e))
+
+    def change_format(self, user):
+        if not self.calendar:
+            return
+
+        if self.calendar.format == 'Table':
+            self.calendar.format = 'Squares'
+        else:
+            self.calendar.format = 'Table'
+
+        self.calendar.save()
+
+        return self.calendar.format

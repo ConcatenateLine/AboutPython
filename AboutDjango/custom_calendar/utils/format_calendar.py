@@ -14,8 +14,15 @@ class FormatCalendar(HTMLCalendar):
 	def formatday(self, day, objetives):
 		objetives_per_day = objetives.filter(start_time__day=day)
 		d = ''
+		t = ''
+  
 		for objective in objetives_per_day:
-			d += f'<li> {objective.get_html_url} <span>⇰</span></li>'
+			for index, theme in enumerate(objective.themes.all()):
+				t += f'<div class="absolute bottom-[{index*2}px] right-0 w-1/2 h-[2px] bg-[{ theme.color }]"></div>'
+      
+			d += f'<li class="text-start relative"> {objective.get_html_url} {t}</li>'
+
+			t = ''
 
 		if day != 0:
 			return f"<td class='hover:bg-[var(--button-custom-bg)] text-center w-20 h-20 border border-[var(--border-color)]'><span class='text-2xl'>{day}</span><ul> {d} </ul></td>"
@@ -34,7 +41,6 @@ class FormatCalendar(HTMLCalendar):
 		objetives = Objetive.objects.filter(owner=self.user,start_time__year=self.year, start_time__month=self.month)
 
 		cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar w-full">\n'
-		# cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
 		cal += f'<tr><th colspan="7" class="month"></th></tr>\n'
 		cal += f'{self.formatweekheader()}\n'
 		for week in self.monthdays2calendar(self.year, self.month):

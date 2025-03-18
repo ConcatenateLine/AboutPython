@@ -24,9 +24,10 @@ class CustomFormatCalendar(HTMLCalendar):
 	def formatday(self, day, objetives):
 		objetives_per_day = objetives.filter(start_time__day=day)
 		d = ''
+		t = ''
 		base_characters_per_line = 25
 		base_lines_per_square = 4
-		current_square_size = 10
+		current_square_size = 11
 		width_day = 0
 		height_day = 0
 		columns_rows = math.ceil(math.sqrt(len(objetives_per_day)))
@@ -58,14 +59,19 @@ class CustomFormatCalendar(HTMLCalendar):
 
 				square_width_elements = []
 				square_height_elements = []
-    
 
-			d += f"<div class='w-[{width_objective}rem] h-[{height_objective}rem] p-2 content-center'><span>{objective.get_html_url}⇰</span></div>"
+			
+			for index, theme in enumerate(objective.themes.all()):
+				t += f'<div class="absolute bottom-0 left-[{index*10}px] w-[10px] h-[10px] bg-[{ theme.color }]"></div>'
+
+			d += f"<div class='w-[{width_objective}rem] h-[{height_objective}rem] p-2 content-center relative'>{objective.get_html_url} {t}</div>"
+
+			t = ''
 
 		if day != 0:
-			return f"<div class='flex flex-wrap relative overflow-hidden bg-[var(--body-medium-color)] calendar-day min-w-[10rem] min-h-[10rem] md:w-[{width_day + 0.5 * (columns_rows-1)}rem] md:h-[{height_day}rem]'><span class='text-2xl absolute bottom-0 right-0 p-2'> {self.name_day[weekday(self.year, self.month, day)]} {day}</span> {d} </div>"
+			return f"<div class='flex flex-wrap relative overflow-hidden bg-[var(--body-medium-color)] calendar-day min-w-[11rem] min-h-[11rem] md:w-[{width_day + 0.5 * (columns_rows-1)}rem] md:h-[{height_day}rem]'><span class='text-2xl absolute bottom-0 right-0 p-2'> {self.name_day[weekday(self.year, self.month, day)]} {day}</span> {d} </div>"
 
-		return f'<div class="relative w-[10rem] h-[10rem] border border-dashed border-[var(--border-color)] p-2" aria-label="{day}"></div>'
+		return f'<div class="relative w-[11rem] h-[11rem] border border-dashed border-[var(--border-color)] p-2" aria-label="{day}"></div>'
 
 	def formatweek(self, theweek, objetives):
 		week = ''

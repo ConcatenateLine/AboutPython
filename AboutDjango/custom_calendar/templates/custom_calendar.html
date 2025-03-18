@@ -9,6 +9,17 @@
     </div>
 {% endblock %}
 
+{% block nav-breadcrumbs %}
+<nav aria-label="Calendar-Breadcrumbs">
+  {% block breadcrumbs %}
+    <div class="breadcrumbs">
+        {{ calendar_format }} calendar - 
+        <a href="{% url 'calendar:change_format' %}">Change Format</a>
+    </div>
+  {% endblock %}
+</nav>
+{% endblock %}
+
 {% block content %}
 <div class=" md:grid grid-cols-6">
     <div class="container">
@@ -28,4 +39,54 @@
     {{ calendar }}
     </div>
 </div>
+{% endblock %}
+
+{% block modal %}
+    <div id="my_modal" class="modal">
+        <div class="modal-content relative max-w-md p-4 w-full bg-[var(--body-quiet-color)]">
+            <button aria-label="Close modal" class="close_modal absolute top-4 right-4">
+                <div class="grid content-center justify-center size-[30px] bg-[var(--body-medium-color)] text-center overflow-hidden transition-colors ease-global motion-safe:duration-350 motion-reduce:duration-0 p-4 hover:bg-[var(--button-custom-hover-bg)] font-bold text-2xl text-[var(--accent)]">
+                    &times;
+               </div>
+            </button>
+            <div id="modal_body">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrabody %}
+<script>
+    var modal = document.getElementById("my_modal");
+    var btn = document.getElementsByClassName("open_modal");
+    var span = document.getElementsByClassName("close_modal")[0];
+
+
+    for (var i = 0; i < btn.length; i++) {
+        btn[i].onclick = function() {
+            let name = this.getAttribute("name");
+            
+            fetch(name)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("modal_body").innerHTML = data;
+                    modal.style.display = "block";
+                }).catch(error => {
+                    document.getElementById("modal_body").innerHTML = "Error loading content";
+                    modal.style.display = "block";
+                });
+        }
+    }
+    
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 {% endblock %}

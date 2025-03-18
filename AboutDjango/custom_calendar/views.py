@@ -21,11 +21,12 @@ class index( generic.ListView ):
         d = get_date(self.request.GET.get('month', None))
         cal = None
 
+        mycalendar = CustomCalendarActions(self.request.user)
+        
         # cal = FormatCalendar(d.year, d.month-1)
         # html_cal = cal.formatmonth(withyear=True)
         
-        # if mycalendar.format =='default':
-        if False:
+        if mycalendar.get_calendar().format =='Table':
             cal = FormatCalendar(self.request.user, d.year, d.month)
         else:
             cal = CustomFormatCalendar(self.request.user, d.year, d.month)
@@ -41,6 +42,8 @@ class index( generic.ListView ):
         context['calendar'] = mark_safe(html_cal)
         context['prev_month'] = prev_month(d)
         context['next_month'] = next_month(d)
+        context['calendar_format'] = mycalendar.get_calendar().format
+        
         return context
 
 def get_date(req_month):
@@ -113,3 +116,18 @@ def delete_objetive(request, objective_id=None):
                 messages.error(request, str(e))
 
             return HttpResponseRedirect(reverse('calendar:objective_edit', args=(objective_id,)))
+
+def show_objective(request, objective_id=None):
+    instance = get_object_or_404(Objetive, pk=objective_id)
+    image = None
+    
+    if instance.image:
+        image = instance.image.image.url
+    
+    return render(request, 'show_objective.html', {'objective': instance, 'image': image})
+
+def change_format(request):
+    custom_calendar = CustomCalendarActions(request.user)
+    custom_calendar.change_format(request.user)
+    
+    return HttpResponseRedirect(reverse('calendar:index'))

@@ -1,0 +1,23 @@
+{% load static %}
+
+<div class="container border border-dashed border-[var(--body-medium-color)] min-h-32 w-full mb-4 bg-[url('{% static 'custom_calendar/background.svg' %}')] bg-cover bg-center content-end">
+    {% if image %}
+        <img src="{{ image }}" alt="{{ objective.title }}">
+    {% endif %}
+</div>
+<h2 class="text-xl font-bold mb-4">{{ objective.title }}</h2>
+<p class="mb-4 indent-8 text-pretty">{{ objective.description }}</p>
+
+{% if objective.themes.all %}
+    <div class="flex flex-wrap gap-2 mt-4 mb-4">
+    {% for theme in objective.themes.all %}
+        <span class="text-black font-bold bg-[{{ theme.color }}] px-1 rounded">
+            <span class="invert">#{{ theme.name }}</span>
+        </span>
+    {% endfor %}
+    </div>
+{% endif %}
+
+<div class="flex justify-end">
+    <a href="{{ objective.get_edit_html_url }}" class="ease group content-center relative z-[1] bg-[var(--button-custom-bg)] transition-colors motion-safe:duration-300 motion-reduce:duration-0 dark:bg-gray-100 px-2 py-1 md:px-5 md:py-3 text-white dark:text-gray-900 dark:active:text-white md:dark:hover:text-white hover:bg-[var(--body-medium-color)]">Edit</a>
+</div>

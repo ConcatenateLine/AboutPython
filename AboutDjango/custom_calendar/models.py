@@ -24,7 +24,7 @@ class CustomCalendar(models.Model):
     owner = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     objetives = models.ManyToManyField('Objetive', blank=True)
     themes = models.ManyToManyField('Theme', blank=True)
-    format = models.CharField(max_length=100, default="default")
+    format = models.CharField(max_length=100, default="Table")
 
     def __str__(self):
         return self.name
@@ -48,7 +48,18 @@ class Objetive(models.Model):
     @property
     def get_html_url(self):
         url = reverse('calendar:objective_edit', args=(self.uuid,))
-        return f'<a href="{url}"> {self.title} </a>'
+        url_show = reverse('calendar:objective_show', args=(self.uuid,))
+        
+        if self.calendar.format == 'Table':
+            return f'{self.title} <br/> <span id="openModal" class="open_modal relative bg-[var(--body-medium-color)] px-2 rounded cursor-pointer text-[var(--accent)] hover:text-[var(--button-custom-hover-bg)]" name="{url_show}">Show ⇰</span>'
+        
+        return f'{self.title} <br/> <span id="openModal" class="open_modal bg-[var(--body-quiet-color)] px-2 rounded cursor-pointer text-[var(--header-link-color)] hover:text-[var(--button-custom-hover-bg)]" name="{url_show}">Show ⇰</span>'
+
+    @property
+    def get_edit_html_url(self):
+        url = reverse('calendar:objective_edit', args=(self.uuid,))
+
+        return f'{url}'
 
 class Theme(models.Model):
     id = models.AutoField(primary_key=True)
