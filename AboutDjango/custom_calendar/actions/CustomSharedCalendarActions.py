@@ -3,26 +3,18 @@ from django.forms import ValidationError
 from custom_calendar.utils.generate import generate_green_color
 from ..models import CustomCalendar, Objetive, Theme, ImageCF
 
-class CustomCalendarActions:
+class CustomSharedCalendarActions:
     calendar = None
 
-    def __init__(self,user, themes=None):
+    def __init__(self,user, calendar_slug, themes=None):
         try:
-            self.calendar = CustomCalendar.objects.filter(owner=user).first()
+            self.calendar = CustomCalendar.objects.filter(slug=calendar_slug).first()
 
-            if not self.calendar:
-                self.calendar = CustomCalendar.objects.create(
-                    name='Calendar',
-                    slug='calendar',
-                    is_public=False,
-                    owner=user
-                ) 
-            
-            if themes:
-                self.add_themes(themes)
+            if not self.calendar or not self.calendar.is_public:
+                raise ValidationError('Calendar can not be found or is not public')
             
         except CustomCalendar.DoesNotExist:
-            raise CustomCalendar.DoesNotExist("CustomCalendar does not exist")
+            raise CustomCalendar.DoesNotExist("Calendar does not exist")
             
 
     def get_calendar(self):
@@ -50,7 +42,7 @@ class CustomCalendarActions:
         image_objective = None
 
         if not objetive or not self.calendar:
-            raise ValidationError('Calendar not found')
+            raise ValidationError('Calendar or objective not found')
 
         if objective_id:
             new_objective = Objetive.objects.get(uuid=objective_id)
@@ -96,7 +88,7 @@ class CustomCalendarActions:
 
     def delete_objetive(self, user, objective_id):
         if not objective_id or not self.calendar:
-            raise ValidationError('Calendar not found')
+            raise ValidationError('Calendar or objective not found')
 
         objective = Objetive.objects.get(uuid=objective_id)
 

@@ -1,1 +1,2 @@
 from .CustomCalendarActions import CustomCalendarActions
+from .CustomSharedCalendarActions import CustomSharedCalendarActions

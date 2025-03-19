@@ -2,14 +2,18 @@ from datetime import datetime, timedelta
 from calendar import HTMLCalendar
 
 from django.urls import reverse
-from ..models import Objetive
 
-class FormatCalendar(HTMLCalendar):
-	def __init__(self, user, year=None, month=None):
+from ..models import CustomCalendar, Objetive
+
+class SharedFormatCalendar(HTMLCalendar):
+	calendar: CustomCalendar | None = None
+    
+	def __init__(self, user, year=None, month=None, calendar=None):
 		self.year = year
 		self.month = month
 		self.user = user
-		super(FormatCalendar, self).__init__()
+		self.calendar = calendar
+		super(SharedFormatCalendar, self).__init__()
 
 	####### formats a day as a td
 	# filter objetives by day
@@ -21,11 +25,11 @@ class FormatCalendar(HTMLCalendar):
 		for objective in objetives_per_day:
 			for index, theme in enumerate(objective.themes.all()):
 				t += f'<div class="absolute bottom-[{index*2}px] right-0 w-1/2 h-[2px] bg-[{ theme.color }]"></div>'
-    
-			url_show = reverse('calendar:objective_show', args=(objective.uuid,))
-   
+
+			url_show = reverse('calendar:shared_objective_show', args=(self.calendar.slug, objective.uuid))
+
 			d+= f'<li class="text-start relative">{objective.title} <br/> <span id="openModal" class="open_modal relative bg-[var(--body-medium-color)] px-2 rounded cursor-pointer text-[var(--accent)] hover:text-[var(--button-custom-hover-bg)]" name="{url_show}">Show ⇰</span>{t}</li>'
-	
+ 
 			t = ''
 
 		if day != 0:
@@ -42,7 +46,10 @@ class FormatCalendar(HTMLCalendar):
 	####### formats a month as a table
 	# filter objetives by year and month
 	def formatmonth(self, withyear=False):
-		objetives = Objetive.objects.filter(owner=self.user,start_time__year=self.year, start_time__month=self.month)
+		if not self.calendar:
+			return 'Format can not execute by calendar'
+
+		objetives = Objetive.objects.filter(calendar=self.calendar, start_time__year=self.year, start_time__month=self.month)
 
 		cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar w-full">\n'
 		cal += f'<tr><th colspan="7" class="month"></th></tr>\n'

@@ -1,4 +1,4 @@
-<a class="ease group content-center relative z-[1] transition-colors motion-safe:duration-300 motion-reduce:duration-0 md:px-5 md:py-2" href="{% url url %}?month={{ year }}-{{ index }}">
+<a class="ease group content-center relative z-[1] transition-colors motion-safe:duration-300 motion-reduce:duration-0 md:px-5 md:py-2" href="{{ goToMonth }}?month={{ year }}-{{ index }}">
     {% if active %}
         <div class="absolute border-b-4 border-[var(--button-custom-bg)] inset-0 z-[0] h-full w-full scale-x-[1]">
         </div>

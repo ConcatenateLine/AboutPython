@@ -8,8 +8,8 @@ from django.contrib import messages
 from custom_calendar.actions import CustomCalendarActions
 from custom_calendar.forms.add_objective import AddObjectiveForm
 
-from .models import Objetive
-from .utils import FormatCalendar, CustomFormatCalendar
+from ..models import Objetive
+from ..utils import FormatCalendar, CustomFormatCalendar
 
 # Create your views here.
 class index( generic.ListView ):
@@ -43,6 +43,9 @@ class index( generic.ListView ):
         context['prev_month'] = prev_month(d)
         context['next_month'] = next_month(d)
         context['calendar_format'] = mycalendar.get_calendar().format
+        context['add_objective'] = reverse('calendar:objective_new')
+        context['goToMonth'] = reverse('calendar:index')
+        context['change_format'] = reverse('calendar:change_format')
         
         return context
 
@@ -55,20 +58,22 @@ def get_date(req_month):
 def prev_month(d):
     first = d.replace(day=1)
     prev_month = first - timedelta(days=1)
-    month = 'month=' + str(prev_month.year) + '-' + str(prev_month.month)
+    month = '?month=' + str(prev_month.year) + '-' + str(prev_month.month)
     return month
 
 def next_month(d):
     days_in_month = calendar.monthrange(d.year, d.month)[1]
     last = d.replace(day=days_in_month)
     next_month = last + timedelta(days=1)
-    month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
+    month = '?month=' + str(next_month.year) + '-' + str(next_month.month)
     return month
 
 def event(request, objective_id=None):
     instance: Objetive = None
     image = None
     initial = {}
+    goToCalendar = reverse('calendar:index')
+    goToDelete = reverse('calendar:objective_delete', args=(objective_id,))
 
     if objective_id:
         instance = get_object_or_404(Objetive, pk=objective_id)
@@ -101,7 +106,7 @@ def event(request, objective_id=None):
             else:
                 messages.error(request, str(e))
         
-    return render(request, 'add_objective.html', {'form': form, 'objective_id': objective_id})
+    return render(request, 'add_objective.html', {'form': form, 'objective_id': objective_id, 'goToCalendar': goToCalendar, 'goToDelete': goToDelete})
 
 def delete_objetive(request, objective_id=None):
         try:
@@ -123,8 +128,10 @@ def show_objective(request, objective_id=None):
     
     if instance.image:
         image = instance.image.image.url
+        
+    edit_url = reverse('calendar:objective_edit', args=(objective_id,))
     
-    return render(request, 'show_objective.html', {'objective': instance, 'image': image})
+    return render(request, 'show_objective.html', {'objective': instance, 'image': image, 'edit_url': edit_url})
 
 def change_format(request):
     custom_calendar = CustomCalendarActions(request.user)

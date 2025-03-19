@@ -6,7 +6,7 @@ Add Objective
 
 {% block header_content %}
     <div class="container flex justify-start items-center border-4 border-[var(--body-quiet-color)]">
-        {% include "blocks/button.html" with url='calendar:index' text="Calendar" %}
+        {% include "blocks/custom_button.html" with action=goToCalendar text="Calendar" %}
     </div>
 {% endblock %}
 
@@ -77,7 +77,7 @@ Add Objective
             <div class="submit-row mt-4 flex justify-between">
                 <input type="submit" value="Save">
                 {% if objective_id %}
-                    <a href="{% url 'calendar:objective_delete' objective_id %}" class="hover:bg-red-200" style="border-radius: 4px; color: red; padding: 10px 15px; ">Delete</a>
+                    <a href="{{ goToDelete }}" class="hover:bg-red-200" style="border-radius: 4px; color: red; padding: 10px 15px; ">Delete</a>
                 {% endif %}
             </div>
         </form>

@@ -1,7 +1,6 @@
 import uuid
 from django.db import models
-from django.shortcuts import reverse
-
+from django.utils.text import slugify
 from storages.backends.s3boto3 import S3Boto3Storage
 
 class PublicMediaStorage(S3Boto3Storage):
@@ -13,7 +12,6 @@ class PrivateMediaStorage(S3Boto3Storage):
     default_acl = 'private'
     file_overwrite = False
 
-# Create your models here.
 class CustomCalendar(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
@@ -26,6 +24,10 @@ class CustomCalendar(models.Model):
     themes = models.ManyToManyField('Theme', blank=True)
     format = models.CharField(max_length=100, default="Table")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.slug = slugify(self.name)
+    
     def __str__(self):
         return self.name
 
@@ -44,22 +46,6 @@ class Objetive(models.Model):
     
     def __str__(self):
         return self.title
-    
-    @property
-    def get_html_url(self):
-        url = reverse('calendar:objective_edit', args=(self.uuid,))
-        url_show = reverse('calendar:objective_show', args=(self.uuid,))
-        
-        if self.calendar.format == 'Table':
-            return f'{self.title} <br/> <span id="openModal" class="open_modal relative bg-[var(--body-medium-color)] px-2 rounded cursor-pointer text-[var(--accent)] hover:text-[var(--button-custom-hover-bg)]" name="{url_show}">Show ⇰</span>'
-        
-        return f'{self.title} <br/> <span id="openModal" class="open_modal bg-[var(--body-quiet-color)] px-2 rounded cursor-pointer text-[var(--header-link-color)] hover:text-[var(--button-custom-hover-bg)]" name="{url_show}">Show ⇰</span>'
-
-    @property
-    def get_edit_html_url(self):
-        url = reverse('calendar:objective_edit', args=(self.uuid,))
-
-        return f'{url}'
 
 class Theme(models.Model):
     id = models.AutoField(primary_key=True)

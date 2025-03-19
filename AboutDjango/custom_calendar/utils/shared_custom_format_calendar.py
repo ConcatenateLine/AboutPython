@@ -2,11 +2,13 @@ from datetime import datetime, timedelta
 from calendar import HTMLCalendar,weekday
 
 from django.urls import reverse
-from ..models import Objetive
+
+from ..models import CustomCalendar, Objetive
 
 import math
 
-class CustomFormatCalendar(HTMLCalendar):
+class SharedCustomFormatCalendar(HTMLCalendar):
+	calendar: CustomCalendar | None = None
 	name_day = {
 		0: 'Monday',
 		1: 'Tuesday',
@@ -17,11 +19,12 @@ class CustomFormatCalendar(HTMLCalendar):
 		6: 'Sunday'
 	}
  
-	def __init__(self, user, year=None, month=None):
+	def __init__(self, user, year=None, month=None, calendar=None):
 		self.year = year
 		self.month = month
 		self.user = user
-		super(CustomFormatCalendar, self).__init__()
+		self.calendar = calendar
+		super(SharedCustomFormatCalendar, self).__init__()
 
 	def formatday(self, day, objetives):
 		objetives_per_day = objetives.filter(start_time__day=day)
@@ -65,11 +68,11 @@ class CustomFormatCalendar(HTMLCalendar):
 			
 			for index, theme in enumerate(objective.themes.all()):
 				t += f'<div class="absolute bottom-0 left-[{index*10}px] w-[10px] h-[10px] bg-[{ theme.color }]"></div>'
-
-			url_show = reverse('calendar:objective_show', args=(objective.uuid,))
-   
-			d+= f'<div class="w-[{width_objective}rem] h-[{height_objective}rem] p-2 content-center relative">{objective.title} <br/> <span id="openModal" class="open_modal bg-[var(--body-quiet-color)] px-2 rounded cursor-pointer text-[var(--header-link-color)] hover:text-[var(--button-custom-hover-bg)]" name="{url_show}">Show ⇰</span>{t}</div>'
     
+			url_show = reverse('calendar:shared_objective_show', args=(self.calendar.slug, objective.uuid))
+
+			d += f'<div class="w-[{width_objective}rem] h-[{height_objective}rem] p-2 content-center relative">{objective.title} <br/> <span id="openModal" class="open_modal bg-[var(--body-quiet-color)] px-2 rounded cursor-pointer text-[var(--header-link-color)] hover:text-[var(--button-custom-hover-bg)]" name="{url_show}">Show ⇰</span>{t} {t}</div>'
+
 			t = ''
 
 		if day != 0:
@@ -85,7 +88,10 @@ class CustomFormatCalendar(HTMLCalendar):
 		return f'{week}'
  
 	def formatmonth(self, withyear=False):
-		objetives = Objetive.objects.filter(owner=self.user,start_time__year=self.year, start_time__month=self.month)
+		if not self.calendar:
+			return 'Format can not execute by calendar'
+
+		objetives = Objetive.objects.filter(calendar=self.calendar, start_time__year=self.year, start_time__month=self.month)
 
 		cal = f'<div class="w-full flex flex-wrap gap-2">'
 		for week in self.monthdays2calendar(self.year, self.month):
