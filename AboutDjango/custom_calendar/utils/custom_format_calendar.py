@@ -2,11 +2,12 @@ from datetime import datetime, timedelta
 from calendar import HTMLCalendar,weekday
 
 from django.urls import reverse
-from ..models import Objetive
+from ..models import Objetive,CustomCalendar
 
 import math
 
 class CustomFormatCalendar(HTMLCalendar):
+	calendar: CustomCalendar | None = None
 	name_day = {
 		0: 'Monday',
 		1: 'Tuesday',
@@ -17,10 +18,11 @@ class CustomFormatCalendar(HTMLCalendar):
 		6: 'Sunday'
 	}
  
-	def __init__(self, user, year=None, month=None):
+	def __init__(self, calendar, user, year=None, month=None):
 		self.year = year
 		self.month = month
 		self.user = user
+		self.calendar = calendar
 		super(CustomFormatCalendar, self).__init__()
 
 	def formatday(self, day, objetives):
@@ -85,7 +87,7 @@ class CustomFormatCalendar(HTMLCalendar):
 		return f'{week}'
  
 	def formatmonth(self, withyear=False):
-		objetives = Objetive.objects.filter(owner=self.user,start_time__year=self.year, start_time__month=self.month)
+		objetives = Objetive.objects.filter(calendar=self.calendar, owner=self.user,start_time__year=self.year, start_time__month=self.month)
 
 		cal = f'<div class="w-full flex flex-wrap gap-2">'
 		for week in self.monthdays2calendar(self.year, self.month):

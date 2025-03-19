@@ -1,17 +1,20 @@
 import calendar
 from datetime import datetime, timedelta, date
+from django.forms import ValidationError
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, render, reverse
 from django.utils.safestring import mark_safe
+from django.utils.text import slugify
 from django.views import generic
 from django.contrib import messages
 
+from users.decorators import public_path
+from custom_calendar.forms.add_calendar import AddCalendarForm
 from custom_calendar.actions import CustomCalendarActions
 from custom_calendar.forms.add_objective import AddObjectiveForm
 
-from ..models import Objetive
+from ..models import CustomCalendar, Objetive
 from ..utils import FormatCalendar, CustomFormatCalendar
 
-# Create your views here.
 class index( generic.ListView ):
     model = Objetive
     template_name = "custom_calendar.html"
@@ -27,9 +30,9 @@ class index( generic.ListView ):
         # html_cal = cal.formatmonth(withyear=True)
         
         if mycalendar.get_calendar().format =='Table':
-            cal = FormatCalendar(self.request.user, d.year, d.month)
+            cal = FormatCalendar(mycalendar.get_calendar(),self.request.user, d.year, d.month)
         else:
-            cal = CustomFormatCalendar(self.request.user, d.year, d.month)
+            cal = CustomFormatCalendar(mycalendar.get_calendar(),self.request.user, d.year, d.month)
         
         cal.setfirstweekday(6)
         html_cal = cal.formatmonth()
@@ -46,6 +49,9 @@ class index( generic.ListView ):
         context['add_objective'] = reverse('calendar:objective_new')
         context['goToMonth'] = reverse('calendar:index')
         context['change_format'] = reverse('calendar:change_format')
+        context['calendar_new'] = reverse('calendar:calendar_new')
+        context['is_owner'] = mycalendar.is_owner(self.request.user)   
+        context['goToOthersCalendars'] = reverse('calendar:others_calendars')
         
         return context
 
@@ -130,11 +136,62 @@ def show_objective(request, objective_id=None):
         image = instance.image.image.url
         
     edit_url = reverse('calendar:objective_edit', args=(objective_id,))
+    is_owner = instance.owner == request.user
     
-    return render(request, 'show_objective.html', {'objective': instance, 'image': image, 'edit_url': edit_url})
+    return render(request, 'show_objective.html', {'objective': instance, 'image': image, 'edit_url': edit_url, 'is_owner': is_owner})
 
 def change_format(request):
     custom_calendar = CustomCalendarActions(request.user)
     custom_calendar.change_format(request.user)
     
     return HttpResponseRedirect(reverse('calendar:index'))
+
+def calendar_new(request):
+    instance:CustomCalendar = None
+    initial = {}
+    goToCalendar = reverse('calendar:index')
+    
+    form = AddCalendarForm(request.POST or None,instance=instance, initial=initial)
+        
+    if request.POST and form.is_valid():
+        try:
+            name = form.cleaned_data['name']
+            
+            if not name:
+                raise ValidationError('Name is required')
+            
+            slug = slugify(name)
+            exists = CustomCalendar.objects.filter(slug=slug).exists()
+            
+            if exists:
+                raise ValidationError('Calendar with this name already exists')
+            
+            calendar = CustomCalendar.objects.create(name=name, owner=request.user, is_public=True)
+
+            messages.success(request, 'This calendar has been created successfully.')
+            
+            return HttpResponseRedirect(reverse('calendar:show_calendar', args=(calendar.slug,)))
+        except Exception as e:
+            if hasattr(e,'messages'):
+                messages.error(request, str(",".join(e.messages)))
+            else:
+                messages.error(request, str(e))
+        
+    return render(request, 'add_calendar.html', {'form': form, 'goToCalendar': goToCalendar})
+
+@public_path
+def others_calendars(request):
+    goToCalendar = reverse('calendar:index')
+    calendars = []
+    
+    try:
+        if request.user.is_authenticated:
+            calendars = CustomCalendar.objects.filter(owner=request.user).exclude(name='Calendar')
+        else:
+            calendars = CustomCalendar.objects.filter(is_public=True).exclude(name='Calendar')
+    
+        return render(request, 'others_calendars.html', {'goToCalendar': goToCalendar, 'calendars': calendars})
+    except Exception as e:
+        messages.error(request, str(e))
+        return render(request, 'others_calendars.html', {'goToCalendar': goToCalendar, 'calendars': calendars})
+    

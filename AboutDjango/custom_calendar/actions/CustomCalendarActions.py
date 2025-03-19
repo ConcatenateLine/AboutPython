@@ -8,7 +8,7 @@ class CustomCalendarActions:
 
     def __init__(self,user, themes=None):
         try:
-            self.calendar = CustomCalendar.objects.filter(owner=user).first()
+            self.calendar = CustomCalendar.objects.filter(owner=user, name='Calendar').first()
 
             if not self.calendar:
                 self.calendar = CustomCalendar.objects.create(
@@ -24,6 +24,12 @@ class CustomCalendarActions:
         except CustomCalendar.DoesNotExist:
             raise CustomCalendar.DoesNotExist("CustomCalendar does not exist")
             
+
+    def is_owner(self, user):
+        if not self.calendar or not user:
+            return False
+        
+        return self.calendar.owner == user
 
     def get_calendar(self):
         return self.calendar

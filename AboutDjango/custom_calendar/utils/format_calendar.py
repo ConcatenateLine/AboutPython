@@ -2,13 +2,16 @@ from datetime import datetime, timedelta
 from calendar import HTMLCalendar
 
 from django.urls import reverse
-from ..models import Objetive
+from ..models import CustomCalendar, Objetive
 
 class FormatCalendar(HTMLCalendar):
-	def __init__(self, user, year=None, month=None):
+	calendar: CustomCalendar | None = None
+ 
+	def __init__(self, calendar, user, year=None, month=None):
 		self.year = year
 		self.month = month
 		self.user = user
+		self.calendar = calendar
 		super(FormatCalendar, self).__init__()
 
 	####### formats a day as a td
@@ -42,7 +45,7 @@ class FormatCalendar(HTMLCalendar):
 	####### formats a month as a table
 	# filter objetives by year and month
 	def formatmonth(self, withyear=False):
-		objetives = Objetive.objects.filter(owner=self.user,start_time__year=self.year, start_time__month=self.month)
+		objetives = Objetive.objects.filter(calendar=self.calendar, owner=self.user,start_time__year=self.year, start_time__month=self.month)
 
 		cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar w-full">\n'
 		cal += f'<tr><th colspan="7" class="month"></th></tr>\n'

@@ -8,6 +8,7 @@
   <div class="p-4 flex flex-row justify-end gap-4">
     
     {% if user.is_authenticated %}
+      {% include "blocks/button_secondary.html" with url='calendar:index' text='Calendar' %}
       {% include "blocks/button_secondary.html" with url='polls:logout' text='Logout' %}
     {% else %}
       {% include "blocks/button_secondary.html" with url='polls:login' text='Login' %}

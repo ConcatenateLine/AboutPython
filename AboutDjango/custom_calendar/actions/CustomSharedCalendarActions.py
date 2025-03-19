@@ -17,6 +17,12 @@ class CustomSharedCalendarActions:
             raise CustomCalendar.DoesNotExist("Calendar does not exist")
             
 
+    def is_owner(self,user):
+        if not self.calendar or not user:
+            return False
+        
+        return self.calendar.owner == user
+    
     def get_calendar(self):
         return self.calendar
 
@@ -43,6 +49,9 @@ class CustomSharedCalendarActions:
 
         if not objetive or not self.calendar:
             raise ValidationError('Calendar or objective not found')
+        
+        if user != self.calendar.owner:
+            raise ValidationError('You are not authorized to add objectives to this calendar.')
 
         if objective_id:
             new_objective = Objetive.objects.get(uuid=objective_id)
@@ -108,6 +117,9 @@ class CustomSharedCalendarActions:
     def change_format(self, user):
         if not self.calendar:
             raise ValidationError('Calendar not found')
+        
+        if user != self.calendar.owner:
+            raise ValidationError('You are not authorized to change the format of this calendar.')
 
         if self.calendar.format == 'Table':
             self.calendar.format = 'Squares'

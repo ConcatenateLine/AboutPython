@@ -18,6 +18,8 @@
     </div>
 {% endif %}
 
+{% if is_owner %}
 <div class="flex justify-end">
     <a href="{{ edit_url }}" class="ease group content-center relative z-[1] bg-[var(--button-custom-bg)] transition-colors motion-safe:duration-300 motion-reduce:duration-0 dark:bg-gray-100 px-2 py-1 md:px-5 md:py-3 text-white dark:text-gray-900 dark:active:text-white md:dark:hover:text-white hover:bg-[var(--body-medium-color)]">Edit</a>
 </div>
+{% endif %}

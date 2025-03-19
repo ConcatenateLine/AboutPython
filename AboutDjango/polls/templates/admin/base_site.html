@@ -9,4 +9,15 @@
 {% endif %}
 {% endblock %}
 
-{% block nav-global %}{% endblock %}
+{% block nav-global %}
+{% endblock %}
+
+{% block nav-breadcrumbs %}
+      <nav aria-label="{% translate 'Breadcrumbs' %}">
+        {% block breadcrumbs %}
+          <div class="breadcrumbs">
+            asd
+          </div>
+        {% endblock %}
+      </nav>
+{% endblock %}

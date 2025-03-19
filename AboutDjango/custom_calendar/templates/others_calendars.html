@@ -1,0 +1,30 @@
+{% extends 'base/base_site.html' %}
+
+{% block title %}
+Other calendars
+{% endblock %}
+
+{% block header_content %}
+    <div class="container flex justify-start items-center border-4 border-[var(--body-quiet-color)]">
+        {% include "blocks/custom_button.html" with action=goToCalendar text="Calendar" %}
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="flex justify-center">
+    <div class="bg-[var(--body-quiet-color)] p-4 max-w-xl w-full">
+        <h2 class="text-xl font-bold mb-4">Calendars</h2>
+        <ul>
+            {% for calendar in calendars %}
+            <li class="p-4 odd:bg-[var(--body-medium-color)] even:bg-[var(--body-quiet-color)]">
+                <div class="flex flex-row justify-between items-start">
+                    <p class="text-center">{{ calendar.name }}</p>
+                    <a class="hover:text-[var(--orange-color)]" href="{% url 'calendar:show_calendar' calendar.slug %}">View</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        
+    </div>
+</div>
+{% endblock %}

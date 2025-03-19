@@ -1,0 +1,47 @@
+{% extends 'base/base_site.html' %}
+
+{% block title %}
+Add Calendar
+{% endblock %}
+
+{% block header_content %}
+    <div class="container flex justify-start items-center border-4 border-[var(--body-quiet-color)]">
+        {% include "blocks/custom_button.html" with action=goToCalendar text="Calendar" %}
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="flex justify-center w-full">
+    <div class="bg-[var(--body-quiet-color)] p-4 max-w-xl w-full">
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="errornote">
+                        {{ field.label }} - <span>{{ error|escape }}</span>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="errornote">
+                    <span>{{ error|escape }}</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="errornote">
+            Calendar additional - <span>This calendar is public, you can share it with other users</span>
+        </div>
+
+        <form {{ form.action }} method="post" id="login-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row grid mb-4">
+                {{ form.name.label_tag }} {{ form.name }}
+            </div>
+            <div class="mb-4">
+            </div>
+            <div class="submit-row mt-4 flex justify-between">
+                <input type="submit" value="Save">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

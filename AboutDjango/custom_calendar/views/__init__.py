@@ -1,2 +1,2 @@
-from .views import index, event, delete_objetive, show_objective, change_format
-from .shared_views import show_calendar, shared_event, shared_show_objective, shared_change_format, shared_delete_objetive
+from .views import index, event, delete_objetive, show_objective, change_format, calendar_new, others_calendars
+from .shared_views import show_calendar, shared_event, shared_show_objective, shared_change_format, shared_delete_objetive, shared_calendar_new, shared_others_calendars

@@ -158,6 +158,7 @@
         {% block breadcrumbs %}
           <div class="breadcrumbs">
             {% if title %} &rsaquo; {{ title }}{% endif %}
+            <a href="{% url 'calendar:others_calendars' %}">List of calendars</a>
           </div>
         {% endblock %}
       </nav>
