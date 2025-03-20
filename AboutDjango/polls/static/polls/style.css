@@ -1,7 +1,178 @@
-body {
-    background: lightblue url('images/dashboardBackground.png') no-repeat;
+html[data-theme="light"],
+:root {
+    --green-primary-color: #1c4d4a;
+    --green-secondary-color: #9eb1ac;
+    --green-tertiary-color: #dfe3de;
+    --orange-color: #fc6719;
+    --yellow-color: #ffb120;
+    --pale-orange-color: #fbebd6;
+    --pale-blue-color: #ccdcf6;
+    --blue-color: #1c4a90;
+    --light-gray-color: #f5f3ee;
+
+    --primary: #9eb1ac;
+    --secondary: #1c4d4a;
+    --accent: #f5dd5d;
+    --primary-fg: var(--green-primary-color);
+
+    --body-fg: #000000;
+    --body-bg: var(--green-primary-color);
+    --body-quiet-color: var(--green-tertiary-color);
+    --body-medium-color: var(--green-secondary-color);
+    --body-loud-color: #000;
+
+    --header-color: #ffc;
+    --header-branding-color: var(--accent);
+    --header-bg: var(--secondary);
+    --header-link-color: var(--primary-fg);
+
+    --breadcrumbs-fg: var(--orange-color);
+    --breadcrumbs-link-fg: var(--body-bg);
+    --breadcrumbs-bg: var(--body-quiet-color);
+
+    --link-fg: var(--primary-fg);
+    --link-hover-color: #036;
+    --link-selected-fg: var(--secondary);
+
+    --hairline-color: #e8e8e8;
+    --border-color: var(--body-quiet-color);
+
+    --error-fg: #ba2121;
+
+    --message-success-bg: #dfd;
+    --message-warning-bg: #ffc;
+    --message-error-bg: #ffefef;
+
+    --darkened-bg: #f8f8f8; /* A bit darker than --body-bg */
+    --selected-bg: #e4e4e4; /* E.g. selected table cells */
+    --selected-row: #ffc;
+
+    --button-fg: #fff;
+    --button-bg: var(--secondary);
+    --button-hover-bg: #205067;
+    --default-button-bg: #205067;
+    --default-button-hover-bg: var(--secondary);
+    --close-button-bg: #747474;
+    --close-button-hover-bg: #333;
+    --delete-button-bg: #ba2121;
+    --delete-button-hover-bg: #a41515;
+
+    --object-tools-fg: var(--button-fg);
+    --object-tools-bg: var(--close-button-bg);
+    --object-tools-hover-bg: var(--close-button-hover-bg);
+
+    --button-custom-bg: var(--green-tertiary-color);
+    --button-custom-hover-bg: var(--orange-color);
+
+    --grid-template-rows: 15% 5% 75% 5%;
+
+    input {
+     background-color: var(--body-medium-color); 
+    }
+
+    .errornote, .errorlist {
+      background-color: var(--pale-orange-color);
+    }
+
+    .link a:hover {
+      color: var(--orange-color);
+    }
+
+    color-scheme: light;
 }
 
-li a {
-    color: green;
+html[data-theme="dark"] {
+  --primary: #264b5d;
+  --primary-fg: #FEEEEE;
+
+  --body-fg: #eeeeee;
+  --body-bg: #121212;
+  --body-quiet-color: #474747;
+  --body-medium-color: #292929;
+  --body-loud-color: #ffffff;
+
+  --breadcrumbs-link-fg: #e0e0e0;
+  --breadcrumbs-bg: var(--primary);
+
+  --link-fg: #81d4fa;
+  --link-hover-color: #4ac1f7;
+  --link-selected-fg: #6f94c6;
+
+  --hairline-color: #272727;
+  --border-color: #353535;
+
+  --error-fg: #e35f5f;
+  --message-success-bg: #006b1b;
+  --message-warning-bg: #583305;
+  --message-error-bg: #570808;
+
+  --darkened-bg: #212121;
+  --selected-bg: #1b1b1b;
+  --selected-row: #00363a;
+
+  --close-button-bg: #333333;
+  --close-button-hover-bg: #666666;
+
+  --button-custom-bg: var(--body-quiet-color);
+  --button-custom-hover-bg: var(--orange-color);
+
+  color-scheme: dark;
+}
+
+/* THEME SWITCH */
+.theme-toggle {
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: transparent;
+  vertical-align: middle;
+  margin-inline-start: 5px;
+  margin-top: -1px;
+}
+
+.theme-toggle svg {
+  vertical-align: middle;
+  height: 1rem;
+  width: 1rem;
+  display: none;
+}
+
+/*
+Fully hide screen reader text so we only show the one matching the current
+theme.
+*/
+.theme-toggle .visually-hidden {
+  display: none;
+}
+
+html[data-theme="auto"] .theme-toggle .theme-label-when-auto {
+  display: block;
+}
+
+html[data-theme="dark"] .theme-toggle .theme-label-when-dark {
+  display: block;
+}
+
+html[data-theme="light"] .theme-toggle .theme-label-when-light {
+  display: block;
+}
+
+/* ICONS */
+.theme-toggle svg.theme-icon-when-auto,
+.theme-toggle svg.theme-icon-when-dark,
+.theme-toggle svg.theme-icon-when-light {
+  fill: var(--header-link-color);
+  color: var(--header-bg);
+}
+
+html[data-theme="auto"] .theme-toggle svg.theme-icon-when-auto {
+  display: block;
+}
+
+html[data-theme="dark"] .theme-toggle svg.theme-icon-when-dark {
+  display: block;
+}
+
+html[data-theme="light"] .theme-toggle svg.theme-icon-when-light {
+  display: block;
 }

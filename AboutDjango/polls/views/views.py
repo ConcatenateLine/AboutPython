@@ -8,11 +8,14 @@ from django.utils import timezone
 from users.decorators import public_path
 
 from ..models import Choice, Question
+from custom_calendar.models import CustomCalendar
 
 # Create your views here.
 @public_path
 def index(request):
-    return render(request, 'index.html', {})
+    calendars = CustomCalendar.objects.filter(is_public=True).order_by('-created_at')[:5]
+
+    return render(request, 'index.html', {'calendars': calendars})
 
 class IndexView(generic.ListView):
     template_name = "polls/index.html"

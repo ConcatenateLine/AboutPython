@@ -1,12 +1,12 @@
 import calendar
 from django.shortcuts import HttpResponseRedirect, get_object_or_404, render, reverse
+from django.utils.decorators import method_decorator
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.views import generic
 from django.contrib import messages
 from datetime import datetime, timedelta, date
 from django.core.exceptions import ValidationError
-from django.views.generic import edit
 
 from users.decorators import public_path
 from custom_calendar.forms.add_calendar import AddCalendarForm
@@ -15,11 +15,11 @@ from custom_calendar.utils import SharedFormatCalendar, SharedCustomFormatCalend
 from custom_calendar.actions import CustomSharedCalendarActions
 from custom_calendar.forms.add_objective import AddObjectiveForm
 
-@public_path
+@method_decorator(public_path, name='dispatch')
 class show_calendar( generic.ListView ):
     model = CustomCalendar
     template_name = "custom_calendar.html"
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         calendar_slug = self.kwargs['calendar_slug']
@@ -134,6 +134,7 @@ def shared_delete_objetive(request, calendar_slug=None, objective_id=None):
 
             return HttpResponseRedirect(reverse('calendar:shared_objective_edit', args=(calendar_slug, objective_id,)))
 
+@public_path
 def shared_show_objective(request, calendar_slug=None, objective_id=None):
     instance = get_object_or_404(Objetive, pk=objective_id)
     image = None
@@ -196,13 +197,17 @@ def shared_calendar_new(request, calendar_slug=None):
         
     return render(request, 'add_calendar.html', {'form': form, 'goToCalendar': goToCalendar})
 
+@public_path
 def shared_others_calendars(request, calendar_slug=None):
     goToCalendar = reverse('calendar:show_calendar', args=(calendar_slug,))
     calendars = []
     
     try:
-        calendars = CustomCalendar.objects.filter(owner=request.user).exclude(name='Calendar')
-    
+        if request.user.is_authenticated:
+            calendars = CustomCalendar.objects.filter(owner=request.user).exclude(name='Calendar')
+        else:
+            calendars = CustomCalendar.objects.filter(is_public=True).exclude(name='Calendar')
+            
         return render(request, 'others_calendars.html', {'goToCalendar': goToCalendar, 'calendars': calendars})
     except Exception as e:
         messages.error(request, str(e))

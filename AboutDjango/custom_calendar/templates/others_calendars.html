@@ -6,7 +6,13 @@ Other calendars
 
 {% block header_content %}
     <div class="container flex justify-start items-center border-4 border-[var(--body-quiet-color)]">
-        {% include "blocks/custom_button.html" with action=goToCalendar text="Calendar" %}
+        {% if user.is_authenticated %}
+            {% include "blocks/custom_button.html" with action=goToCalendar text="Calendar" %}
+        {% endif %}
+
+        {% if user.is_anonymous %}
+          {% include "blocks/button.html" with url='polls:home' text="Home" %}
+        {% endif %}
     </div>
 {% endblock %}
 
@@ -17,8 +23,8 @@ Other calendars
         <ul>
             {% for calendar in calendars %}
             <li class="p-4 odd:bg-[var(--body-medium-color)] even:bg-[var(--body-quiet-color)]">
-                <div class="flex flex-row justify-between items-start">
-                    <p class="text-center">{{ calendar.name }}</p>
+                <div class="flex flex-col md:flex-row justify-between items-start">
+                    <p>{{ calendar.name }}</p>
                     <a class="hover:text-[var(--orange-color)]" href="{% url 'calendar:show_calendar' calendar.slug %}">View</a>
                 </div>
             </li>

@@ -2,16 +2,16 @@
     {% if active %}
         <div class="absolute border-b-4 border-[var(--button-custom-bg)] inset-0 z-[0] h-full w-full scale-x-[1]">
         </div>
-        <span class="relative z-[1] text-[var(--button-custom-bg)]">
+        <span class="relative z-[1] text-[var(--body-fg)]">
             {{ text }}
         </span>
     {% else  %}
         <div class="absolute border-b-4 border-[var(--button-custom-bg)]  inset-0 z-[0] h-full w-full scale-x-[0] opacity-0 transition-opacity ease-global motion-safe:duration-300 motion-reduce:duration-0 md:origin-right md:transition-transform md:group-hover:origin-left md:group-focus-visible:origin-left md:motion-safe:duration-300 md:motion-reduce:duration-0 group-active:scale-x-[1] group-active:opacity-100 md:opacity-100 md:group-hover:scale-x-[1] md:group-focus-visible:scale-x-[1]">
         </div>
-        <span class="relative z-[1] text-[var(--button-custom-bg)] opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+        <span class="relative z-[1] text-[var(--button-custom-bg)] dark:text-[var(--body-fg)] opacity-100 group-hover:opacity-0 transition-opacity duration-300">
             {{ index }}
         </span>
-        <span class="relative z-[1] text-[var(--button-custom-bg)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <span class="relative z-[1] text-[var(--button-custom-bg)] dark:text-[var(--body-fg)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             {{ text }}
         </span>    
     {% endif %}

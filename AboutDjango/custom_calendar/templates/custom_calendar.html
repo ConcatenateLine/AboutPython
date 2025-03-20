@@ -2,7 +2,7 @@
 {% block title %}Calendar for {{ year }}{% endblock %}
 
 {% block header_content %}
-    <div class="container flex justify-start items-center border-4 border-[var(--body-quiet-color)]">
+    <div class="container flex flex-col sm:flex-row justify-start items-center border-4 border-[var(--body-quiet-color)]">
         {% include "blocks/button.html" with url='calendar:index' action=prev_month text="Previous Month" %}
         {% include "blocks/button.html" with url='calendar:index' action=next_month text="Next Month" %}
         {% if is_owner %}
@@ -22,11 +22,11 @@
             <a class="w-full my-4 mx-4" href="{% url 'calendar:index' %}">My Calendar</a>
             <a class="w-full my-4 mx-4" href="{{ goToOthersCalendars }}">Others calendars</a>
         {% else %}
-            <a class="w-full my-4 mx-4" href="{% url 'calendar:index' %}">My Calendar</a>
-
             {% if user.is_authenticated  %}
-                <a class="w-full my-4 mx-4" href="{{ goToOthersCalendars }}">Others calendars</a>
+                <a class="w-full my-4 mx-4" href="{% url 'calendar:index' %}">My Calendar</a>
             {% endif %}
+            <a class="w-full my-4 mx-4" href="{{ goToOthersCalendars }}">Others calendars</a>
+
         {% endif %}
     </div>
   {% endblock %}
@@ -81,7 +81,9 @@
             let name = this.getAttribute("name");
             
             fetch(name)
-                .then(response => response.text())
+                .then(response => {
+                    return response.text();
+                })
                 .then(data => {
                     document.getElementById("modal_body").innerHTML = data;
                     modal.style.display = "block";

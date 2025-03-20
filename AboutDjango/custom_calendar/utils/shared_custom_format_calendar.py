@@ -71,7 +71,7 @@ class SharedCustomFormatCalendar(HTMLCalendar):
     
 			url_show = reverse('calendar:shared_objective_show', args=(self.calendar.slug, objective.uuid))
 
-			d += f'<div class="w-[{width_objective}rem] h-[{height_objective}rem] p-2 content-center relative">{objective.title} <br/> <span id="openModal" class="open_modal bg-[var(--body-quiet-color)] px-2 rounded cursor-pointer text-[var(--header-link-color)] hover:text-[var(--button-custom-hover-bg)]" name="{url_show}">Show ⇰</span>{t} {t}</div>'
+			d += f'<div class="w-[{width_objective}rem] h-[{height_objective}rem] p-2 content-center relative">{objective.title} <br/> <span id="openModal" class="open_modal bg-[var(--body-quiet-color)] px-2 rounded cursor-pointer text-[var(--accent)] hover:text-[var(--button-custom-hover-bg)]" name="{url_show}">Show ⇰</span>{t} {t}</div>'
 
 			t = ''
 
