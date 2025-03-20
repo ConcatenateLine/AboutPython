@@ -12,6 +12,9 @@ class CustomSharedCalendarActions:
 
             if not self.calendar or not self.calendar.is_public:
                 raise ValidationError('Calendar can not be found or is not public')
+
+            if themes:
+                self.add_themes(themes)
             
         except CustomCalendar.DoesNotExist:
             raise CustomCalendar.DoesNotExist("Calendar does not exist")
